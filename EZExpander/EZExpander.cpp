@@ -31,10 +31,10 @@ void EZExpander::init(int latchPin, int clockPin, int dataPin)
   pinMode(clockPin, OUTPUT);
   pinMode(dataPin, OUTPUT);
 
-  fastDigitalWrite(this->latchPin, LOW);
+  digitalWrite(this->latchPin, LOW);
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data2);
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data1);
-  fastDigitalWrite(this->latchPin, HIGH);
+  digitalWrite(this->latchPin, HIGH);
 }
 
 EZExpander::EZExpander(int latchPin, int clockPin, int dataPin)
@@ -79,44 +79,18 @@ void EZExpander::digitalWrite(int pin, uint8_t v, bool doShift) {
 void EZExpander::doShiftOut() {
   if (this->latchPin == DEFAULT_LATCH_PIN) {
     // optimized for default latch pin
-    PORTB &= ~1;
+    PORTB &= B11101111;
   } else {
-    fastDigitalWrite(this->latchPin, LOW);
+    digitalWrite(this->latchPin, LOW);
   }
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data2);
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data1);
   if (this->latchPin == DEFAULT_LATCH_PIN) {
     // optimized for default latch pin
-    PORTB |= 1;
+    PORTB |= B00010000;
   } else {
-    fastDigitalWrite(this->latchPin, HIGH);
+    digitalWrite(this->latchPin, HIGH);
   }
 }
 
-void fastDigitalWrite(int pin, uint8_t signal) {
-  if (signal == LOW) {
-    if (pin <= 7) {
-      PORTD &= (~(1 << pin));
-    } else {
-      if ((pin >= 8) && (pin <= 13)) {
-        PORTB &= (~(1 << (pin-8)));
-      } else {
-        if ((pin >= 14) && (pin <= 19)) {
-          PORTC &= (~(1 << (pin-14)));
-        }
-      }
-    }
-  } else {
-    if (pin <= 7) {
-      PORTD |= (1 << pin);
-    } else {
-      if ((pin >= 8) && (pin <= 13)) {
-        PORTB |= (1 << (pin-8));
-      } else {
-        if ((pin >= 14) && (pin <= 19)) {
-          PORTC |= (1 << (pin-14));
-        }
-      }
-    }
-  }
-}
+
