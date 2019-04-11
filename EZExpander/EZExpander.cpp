@@ -1,7 +1,7 @@
 /*
   EZExpander.cpp - EZExpander Library
   Copyright (C) 2010 Michael Krumpus  All rights reserved.
- 
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -21,7 +21,7 @@ EZExpander::EZExpander()
 
 void EZExpander::init(int latchPin, int clockPin, int dataPin)
 {
-    this->latchPin = latchPin;
+  this->latchPin = latchPin;
   this->clockPin = clockPin;
   this->dataPin = dataPin;
   data1 = 0;
@@ -42,11 +42,11 @@ EZExpander::EZExpander(int latchPin, int clockPin, int dataPin)
   init(latchPin, clockPin, dataPin);
 }
 
-void EZExpander::digitalWrite(int pin, uint8_t v) {
-  digitalWrite(pin, v, true);
+void EZExpander::exDigitalWrite(int pin, uint8_t v) {
+  exDigitalWrite(pin, v, true);
 }
 
-void EZExpander::digitalWrite(int pin, uint8_t v, bool doShift) {
+void EZExpander::exDigitalWrite(int pin, uint8_t v, bool doShift) {
   if ((pin < REGISTER1_FIRST_PIN) || (pin > REGISTER2_LAST_PIN)) {
     return;
   }
@@ -77,20 +77,8 @@ void EZExpander::digitalWrite(int pin, uint8_t v, bool doShift) {
 
 
 void EZExpander::doShiftOut() {
-  if (this->latchPin == DEFAULT_LATCH_PIN) {
-    // optimized for default latch pin
-    PORTB &= B11101111;
-  } else {
-    digitalWrite(this->latchPin, LOW);
-  }
+  digitalWrite(this->latchPin, LOW);
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data2);
   shiftOut(this->dataPin, this->clockPin, MSBFIRST, data1);
-  if (this->latchPin == DEFAULT_LATCH_PIN) {
-    // optimized for default latch pin
-    PORTB |= B00010000;
-  } else {
-    digitalWrite(this->latchPin, HIGH);
-  }
+  digitalWrite(this->latchPin, HIGH);
 }
-
-

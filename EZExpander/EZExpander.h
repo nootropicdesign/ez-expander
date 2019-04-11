@@ -1,7 +1,7 @@
 /*
   EZExpander.h - EZExpander Library
   Copyright (C) 2010 Michael Krumpus  All rights reserved.
- 
+
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
   License as published by the Free Software Foundation; either
@@ -27,8 +27,8 @@ class EZExpander
 public:
   EZExpander();
   EZExpander(int latchPin, int clockPin, int dataPin);
-  void digitalWrite(int pin, uint8_t v);
-  void digitalWrite(int pin, uint8_t v, bool doShift);
+  void exDigitalWrite(int pin, uint8_t v);
+  void exDigitalWrite(int pin, uint8_t v, bool doShift);
   void doShiftOut();
 
 private:
@@ -52,4 +52,3 @@ void fastDigitalWrite(int pin, uint8_t signal);
 #define REGISTER2_LAST_PIN 35
 
 #endif /* EZExpander_h */
-
